@@ -47,7 +47,8 @@ namespace Wurmspiel
             if (!Johnny.krieche())
             {
                 Uhrski.stoppe();
-                g.setzeMeldung("u mad bro?");               
+                g.setzeMeldung("Enter for Restart");
+                initialisiereSpiel();
                 return;
             }
             

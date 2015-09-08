@@ -42,7 +42,6 @@ namespace Wurmspiel
         public void setzeMeldung(string pMeldung)
         {
             MessageBox.Show(pMeldung);
-            
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
