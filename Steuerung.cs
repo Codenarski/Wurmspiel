@@ -50,7 +50,7 @@ namespace Wurmspiel
                 g.setzeMeldung("u mad bro?");               
                 return;
             }
-                
+            
             g.aktualisiereOberflaeche();
 
         }

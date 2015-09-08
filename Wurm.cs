@@ -67,10 +67,10 @@ namespace Wurmspiel
                     neuX = x - 1;
                     break;
                 case Richtung.Hoch:
-                    neuY = y - 1;
+                    neuY = y + 1;
                     break;
                 case Richtung.Runter:
-                    neuY = y + 1;
+                    neuY = y - 1;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -100,7 +100,7 @@ namespace Wurmspiel
             Queue<Wurmzelle> Kopierterwurm = KopiereWurm();
             BewegeKopf();
             Bewegekoerper(Kopierterwurm);
-            return GibtEsKollisionen();
+            return !GibtEsKollisionen();
 
         }
         public void wachse()
