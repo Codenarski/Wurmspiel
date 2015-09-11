@@ -14,7 +14,7 @@ namespace Wurmspiel
 
         }
 
-        public override void zeichne(Graphics g)
+        public override void Zeichne(Graphics g)
         {
             g.FillEllipse(Brushes.DeepPink, new Rectangle(X * 10, Y * 10, 10, 10));
         }

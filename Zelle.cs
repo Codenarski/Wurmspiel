@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 
 namespace Wurmspiel
 {
@@ -12,16 +7,16 @@ namespace Wurmspiel
         public int X { get; set; }
         public int Y { get; set; }
 
-        public Zelle(int pX, int pY)
+        protected Zelle(int pX, int pY)
         {
             X = pX;
             Y = pY;
         }
-        public Boolean hatGleicheXY(int pX, int pY)
+        public bool HatGleicheXy(int pX, int pY)
         {
             return (X == pX) && (Y == pY);
         }
-        public abstract void zeichne(Graphics g);
+        public abstract void Zeichne(Graphics g);
         
     }
 }

@@ -10,133 +10,118 @@ namespace Wurmspiel
 {
     class Steuerung
     {
-        private Oberflaeche g;
-        private Wurm Johnny;
-        private FutterZelle fluffy;
-        private Uhr Uhrski;
+        private readonly Oberflaeche _g;
+        private Wurm _johnny;
+        private FutterZelle _fluffy;
+        private readonly Uhr _uhrski;
 
         public Steuerung(Oberflaeche g)
         {
-            this.g = g;
-            Uhrski = new Uhr(this);
+            this._g = g;
+            _uhrski = new Uhr(this);
         }
-        public void verarbeiteTasteDruck(Keys Taste)
+        public void VerarbeiteTasteDruck(Keys taste)
         {
-            switch (Taste)
+            switch (taste)
             {
                 case Keys.Up:
-                    if (Johnny.aRichtung != Richtung.Runter)
-                        setzteRichtung(Richtung.Hoch);
+                    if (_johnny.ARichtung != Richtung.Runter)
+                        SetzteRichtung(Richtung.Hoch);
                     break;
                 case Keys.Down:
-                    if (Johnny.aRichtung != Richtung.Hoch)
-                    setzteRichtung(Richtung.Runter);
+                    if (_johnny.ARichtung != Richtung.Hoch)
+                    SetzteRichtung(Richtung.Runter);
                     break;
                 case Keys.Left:
-                    if (Johnny.aRichtung != Richtung.Rechts)
-                    setzteRichtung(Richtung.Links);
+                    if (_johnny.ARichtung != Richtung.Rechts)
+                    SetzteRichtung(Richtung.Links);
                     break;
                 case Keys.Right:
-                    if (Johnny.aRichtung != Richtung.Links)
-                    setzteRichtung(Richtung.Rechts);
+                    if (_johnny.ARichtung != Richtung.Links)
+                    SetzteRichtung(Richtung.Rechts);
                     break;
             }
          }
-        public void verarbeiteUhrTick()
+        public void VerarbeiteUhrTick()
         {
-            if (!Johnny.krieche())
+            if (!_johnny.Krieche())
             {
-                Uhrski.stoppe();
-                g.setzeMeldung("Enter for Restart");
-                initialisiereSpiel();
+                _uhrski.Stoppe();
+                _g.SetzeMeldung("Enter for Restart");
+                InitialisiereSpiel();
                 return;
             }
-            
-            g.aktualisiereOberflaeche();
-
+            _g.AktualisiereOberflaeche();
         }
 
-        public void setzteRichtung(Richtung Richtung)
+        public void SetzteRichtung(Richtung richtung)
         {
-            Johnny.aRichtung = Richtung;
+            _johnny.ARichtung = richtung;
 
         }
-        public void initialisiereSpiel()
+        public void InitialisiereSpiel()
         {
-            Johnny = new Wurm(25, 25, 50, 50);
-            erzeugeFutterAusserhalbWurm();
-            g.aktualisiereOberflaeche();
-            Uhrski.Start();
-            
+            _johnny = new Wurm(25, 25, 50, 50);
+            ErzeugeFutterAusserhalbWurm();
+            _g.AktualisiereOberflaeche();
+            _uhrski.Start();
         }
 
-        public void erzeugeFutterAusserhalbWurm()
+        public void ErzeugeFutterAusserhalbWurm()
         {
             int x, y;
 
             do
             {
-                x = erzeugeZUfallsZahl();
-                y = erzeugeZUfallsZahl();
+                x = ErzeugeZUfallsZahl();
+                y = ErzeugeZUfallsZahl();
 
-            } while (liegtAufWurm(x, y)); 
+            } while (LiegtAufWurm(x, y)); 
  
-            fluffy = new FutterZelle(x,y);
+            _fluffy = new FutterZelle(x,y);
         }
 
-        public int erzeugeZUfallsZahl()
+        public int ErzeugeZUfallsZahl()
         {
-            Random rd1 = new Random();
+            var rd1 = new Random();
             return rd1.Next(0, 50);
-           
-
         }
 
-        public bool liegtAufWurm(int x, int y)
+        public bool LiegtAufWurm(int x, int y)
         {
-            foreach (var wurmzelle in Johnny.Zellen())
-            {
-                bool jein = wurmzelle.hatGleicheXY(x, y);
-                if (jein)
-                    return true;
-                
-            }
-            return false;
-            
+            return _johnny.Zellen().Select(wurmzelle => wurmzelle.HatGleicheXy(x, y)).Any(hatGleicheXy => hatGleicheXy);
         }
 
-        public void zeichne(Graphics g)
+        public void Zeichne(Graphics g)
         {
             if (FutterzelleGefressen())
             {
-                Johnny.wachse();
-                erzeugeFutterAusserhalbWurm();
+                _johnny.Wachse();
+                ErzeugeFutterAusserhalbWurm();
             }
-            zeichneFutter(g);
-            zeichneWurm(g);
-
-            
+            ZeichneFutter(g);
+            ZeichneWurm(g);
         }
         private bool FutterzelleGefressen()
         {
 
-            return Johnny.Zellen().First().hatGleicheXY(fluffy.X,fluffy.Y); 
+            return _johnny.Zellen().First().HatGleicheXy(_fluffy.X,_fluffy.Y); 
         }
-        public void zeichneFutter(Graphics g)
+        public void ZeichneFutter(Graphics g)
         {
 
-            Brush futterColor = Brushes.Black;
-            fluffy.zeichne(g);
+            var futterColor = Brushes.Black;
+            _fluffy.Zeichne(g);
             
         }
 
-        public void zeichneWurm(Graphics g)
+        public void ZeichneWurm(Graphics g)
         {
-            Brush zellenColor = Brushes.Yellow;
+            var zellenColor = Brushes.Yellow;
 
-            foreach (var wurmzelle in Johnny.Zellen())
+            foreach (var wurmzelle in _johnny.Zellen())
             {
-                wurmzelle.zeichne(g);
+                wurmzelle.Zeichne(g);
             }
 
         }     

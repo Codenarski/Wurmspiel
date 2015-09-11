@@ -10,28 +10,25 @@ namespace Wurmspiel
 {
     class Uhr
     {
-        Timer meinTimer = new Timer();
-        private double aTakt = 0.1;
-        private Steuerung fucka;
+        readonly Timer _meinTimer = new Timer();
+        private double _aTakt = 0.1;
+        private readonly Steuerung _ichKennDieSteuerung;
 
         public Uhr(Steuerung ichkennSteuerung)
         {
-            fucka = ichkennSteuerung;
-            meinTimer.Tick += delegate(object sender, EventArgs e) { fucka.verarbeiteUhrTick(); };
-            meinTimer.Interval = Convert.ToInt32(aTakt*1000);
+            _ichKennDieSteuerung = ichkennSteuerung;
+            _meinTimer.Tick += delegate(object sender, EventArgs e) { _ichKennDieSteuerung.VerarbeiteUhrTick(); };
+            _meinTimer.Interval = Convert.ToInt32(_aTakt*1000);
         }
-        public void stoppe()
+        public void Stoppe()
         {
-            meinTimer.Stop();
+            _meinTimer.Stop();
         }
 
         public void Start()
         {
-            meinTimer.Start();
+            _meinTimer.Start();
         }
-             
-            
-
     }
 
    

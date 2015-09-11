@@ -14,32 +14,32 @@ namespace Wurmspiel
 {
     public partial class Oberflaeche : Form
     {
-        private Steuerung ichkennSteuerung;
-        private int aMeldung;
+        private Steuerung _ichkennSteuerung;
+        private int _aMeldung;
 
         public Oberflaeche()
         {
-            ichkennSteuerung = new Steuerung(this);
+            _ichkennSteuerung = new Steuerung(this);
             InitializeComponent();
-            ichkennSteuerung.initialisiereSpiel();
+            _ichkennSteuerung.InitialisiereSpiel();
 
         }
-        public void initialisiereOberflaeche()
+        public void InitialisiereOberflaeche()
         {
-            aktualisiereOberflaeche();
+            AktualisiereOberflaeche();
         }
-        public void aktualisiereOberflaeche()
+        public void AktualisiereOberflaeche()
         {
 
-            zeichneFutterundWurm(pictureBox1.CreateGraphics());
+            ZeichneFutterundWurm(pictureBox1.CreateGraphics());
         }
 
-        public void zeichneFutterundWurm(Graphics g)
+        public void ZeichneFutterundWurm(Graphics g)
         {
             g.Clear(this.BackColor);
-            ichkennSteuerung.zeichne(g);
+            _ichkennSteuerung.Zeichne(g);
         }
-        public void setzeMeldung(string pMeldung)
+        public void SetzeMeldung(string pMeldung)
         {
             MessageBox.Show(pMeldung);
         }
@@ -51,7 +51,7 @@ namespace Wurmspiel
 
         private void Oberflaeche_KeyDown(object sender, KeyEventArgs e)
         {
-            ichkennSteuerung.verarbeiteTasteDruck(e.KeyCode);
+            _ichkennSteuerung.VerarbeiteTasteDruck(e.KeyCode);
         }
     }
 }

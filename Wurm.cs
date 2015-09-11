@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Wurmspiel
 {
@@ -17,39 +13,37 @@ namespace Wurmspiel
     }
     public class Wurm
     {
-        private int aLaenge;        
-        public Richtung aRichtung;
-        private int maxX;
-        private int maxY;
-        
-        Queue<Wurmzelle> Wurmzellen;
+        private int _aLaenge;        
+        public Richtung ARichtung;
+        private readonly int _maxX;
+        private readonly int _maxY;
+
+        readonly Queue<Wurmzelle> _wurmzellen;
 
         public Wurm(int kopfX, int kopfY, int maxX, int maxY)
         {
-            aRichtung = Richtung.Hoch;
-            this.maxX = maxX;
-            this.maxY = maxY;
-            Wurmzellen = new Queue<Wurmzelle>();
-            Wurmzelle kopf = new Wurmzelle(kopfX, kopfY);
-
-            Wurmzellen.Enqueue(kopf);
+            ARichtung = Richtung.Hoch;
+            _maxX = maxX;
+            _maxY = maxY;
+            _wurmzellen = new Queue<Wurmzelle>();
+            var kopf = new Wurmzelle(kopfX, kopfY);
+            _wurmzellen.Enqueue(kopf);
             ErweitereWurmUmWurmzellen(3);
-            aLaenge = Wurmzellen.Count;
+            _aLaenge = _wurmzellen.Count;
         }
 
         public Queue<Wurmzelle> Zellen()
         {
-            return Wurmzellen;
+            return _wurmzellen;
         }
 
         private void ErweitereWurmUmWurmzellen(int x)
         {
-            Wurmzelle alteZelle = Wurmzellen.First();
-            Wurmzelle neueZelle;
-            for (int i = 0; i < x; i++)
+            var alteZelle = _wurmzellen.First();
+            for (var i = 0; i < x; i++)
             {
-                neueZelle = ErstelleWurmzelle(alteZelle.X, alteZelle.Y);
-                Wurmzellen.Enqueue(neueZelle);
+                var neueZelle = ErstelleWurmzelle(alteZelle.X, alteZelle.Y);
+                _wurmzellen.Enqueue(neueZelle);
                 alteZelle = neueZelle;
             }
             
@@ -58,7 +52,7 @@ namespace Wurmspiel
         {
             int neuX = x, neuY = y;
 
-            switch (aRichtung)
+            switch (ARichtung)
             {
                 case Richtung.Links:
                     neuX = x + 1;
@@ -80,49 +74,49 @@ namespace Wurmspiel
         }
 
 
-       public int gibKopfPosX()
+       public int GibKopfPosX()
         {
-            return Wurmzellen.First<Wurmzelle>().X;
+            return _wurmzellen.First<Wurmzelle>().X;
         }
         
-        public int gibKopfPosY()
+        public int GibKopfPosY()
         {
-            return Wurmzellen.First<Wurmzelle>().Y;
+            return _wurmzellen.First<Wurmzelle>().Y;
         }
         
-        public void setzeRichtung(Richtung pRichtung)
+        public void SetzeRichtung(Richtung pRichtung)
         {
-            aRichtung = pRichtung;                        
+            ARichtung = pRichtung;                        
         }
         
-        public Boolean krieche()
+        public bool Krieche()
         {
-            Queue<Wurmzelle> Kopierterwurm = KopiereWurm();
+            var kopierterwurm = KopiereWurm();
             BewegeKopf();
-            Bewegekoerper(Kopierterwurm);
+            Bewegekoerper(kopierterwurm);
             return !GibtEsKollisionen();
 
         }
-        public void wachse()
+        public void Wachse()
         {
             ErweitereWurmUmWurmzellen(1);
         }
 
         private void BewegeKopf()
         {
-            switch (aRichtung)
+            switch (ARichtung)
             {
                 case Richtung.Links:
-                    Wurmzellen.First().X--; 
+                    _wurmzellen.First().X--; 
                     break;
                 case Richtung.Rechts:
-                    Wurmzellen.First().X++;
+                    _wurmzellen.First().X++;
                     break;
                 case Richtung.Hoch:
-                    Wurmzellen.First().Y--;
+                    _wurmzellen.First().Y--;
                     break;
                 case Richtung.Runter:
-                    Wurmzellen.First().Y++;
+                    _wurmzellen.First().Y++;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -132,12 +126,10 @@ namespace Wurmspiel
 
         private Queue<Wurmzelle> KopiereWurm()
         {
-            Queue<Wurmzelle>kopierterwurm = new Queue<Wurmzelle>();        
-            Wurmzelle neuerWurm;
+            var kopierterwurm = new Queue<Wurmzelle>();
 
-            foreach (var alterWurm in Wurmzellen)
+            foreach (var neuerWurm in _wurmzellen.Select(alterWurm => new Wurmzelle(alterWurm.X, alterWurm.Y)))
             {
-                neuerWurm = new Wurmzelle(alterWurm.X, alterWurm.Y);
                 kopierterwurm.Enqueue(neuerWurm);
             }
 
@@ -146,50 +138,41 @@ namespace Wurmspiel
 
         private void Bewegekoerper(Queue<Wurmzelle> kopierterwurm)
         {
-            Wurmzelle[] kopierterWurmArr = kopierterwurm.ToArray();
-            Wurmzelle[] neuerWirmArr = Wurmzellen.ToArray();
-            Wurmzelle kopierteZelle;
-            Wurmzelle neueZelle;
+            var kopierterWurmArr = kopierterwurm.ToArray();
+            var neuerWirmArr = _wurmzellen.ToArray();
 
-            for (int i = 0; i < neuerWirmArr.Count(); i++)
+            for (var i = 0; i < neuerWirmArr.Count(); i++)
             {
                 if (WennDasDerKopfIstDannIgnorierenWirIhn(i))
                    continue;
 
-                kopierteZelle = kopierterWurmArr[i - 1]; 
-                neueZelle = neuerWirmArr[i];
+                var kopierteZelle = kopierterWurmArr[i - 1]; 
+                var neueZelle = neuerWirmArr[i];
                 neueZelle.X = kopierteZelle.X;
                 neueZelle.Y = kopierteZelle.Y;
 
             }
         }
 
-        private Boolean WennDasDerKopfIstDannIgnorierenWirIhn(int position)
+        private static bool WennDasDerKopfIstDannIgnorierenWirIhn(int position)
         {
             return position == 0;
         }
 
-        private Boolean GibtEsKollisionen()
+        private bool GibtEsKollisionen()
         {
-            if ((BeruehrtKopfKoerper() == false) && (BeruehrtKopfWand() == false) && (Wurmzellen.Count < 10))
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }           
+            return (BeruehrtKopfKoerper() != false) || (BeruehrtKopfWand() != false) || (_wurmzellen.Count >= 10);
         }
 
-        private Boolean BeruehrtKopfKoerper()
+        private bool BeruehrtKopfKoerper()
         {
-            Wurmzelle[] Wurmzellenaray = Wurmzellen.ToArray();
-            Wurmzelle kopf = Wurmzellen.First();
-            for (int i = 0; i < Wurmzellenaray.Count(); i++)
+            var wurmzellenaray = _wurmzellen.ToArray();
+            var kopf = _wurmzellen.First();
+            for (var i = 0; i < wurmzellenaray.Count(); i++)
             {
                 if(WennDasDerKopfIstDannIgnorierenWirIhn(i))
                     continue;
-                if ((kopf.X == Wurmzellenaray[i].X) && (kopf.Y == Wurmzellenaray[i].Y))
+                if ((kopf.X == wurmzellenaray[i].X) && (kopf.Y == wurmzellenaray[i].Y))
                 {
                     return true;
                 }
@@ -198,14 +181,10 @@ namespace Wurmspiel
             return false;
         }
 
-        private Boolean BeruehrtKopfWand()
+        private bool BeruehrtKopfWand()
         {
-            Wurmzelle kopf = Wurmzellen.First();
-            if ((kopf.X > maxX) || (kopf.Y > maxY) || (kopf.X < 0) || (kopf.Y < 0))
-            {
-                return true;
-            }
-            return false;
+            var kopf = _wurmzellen.First();
+            return (kopf.X > _maxX) || (kopf.Y > _maxY) || (kopf.X < 0) || (kopf.Y < 0);
         }
     }
 }
