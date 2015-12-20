@@ -12,11 +12,13 @@ namespace Wurmspiel
             X = pX;
             Y = pY;
         }
+
         public bool HatGleicheXy(int pX, int pY)
         {
             return (X == pX) && (Y == pY);
         }
+
         public abstract void Zeichne(Graphics g);
-        
     }
+
 }

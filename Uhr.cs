@@ -1,36 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Wurmspiel
 {
-    class Uhr
+    internal class Uhr
     {
-        readonly Timer _meinTimer = new Timer();
-        private double _aTakt = 0.1;
-        private readonly Steuerung _ichKennDieSteuerung;
+        private readonly Timer _timer = new Timer();
+        private readonly double _takt = 0.1;
+        private readonly Steuerung _steuerung;
 
-        public Uhr(Steuerung ichkennSteuerung)
+        public Uhr(Steuerung steuerung)
         {
-            _ichKennDieSteuerung = ichkennSteuerung;
-            _meinTimer.Tick += delegate(object sender, EventArgs e) { _ichKennDieSteuerung.VerarbeiteUhrTick(); };
-            _meinTimer.Interval = Convert.ToInt32(_aTakt*1000);
+            _steuerung = steuerung;
+            _timer.Tick += delegate { _steuerung.VerarbeiteUhrTick(); };
+            _timer.Interval = Convert.ToInt32(_takt*1000);
         }
-        public void Stoppe()
+
+        public void Stop()
         {
-            _meinTimer.Stop();
+            _timer.Stop();
         }
 
         public void Start()
         {
-            _meinTimer.Start();
+            _timer.Start();
         }
     }
 
-   
+
 }
 

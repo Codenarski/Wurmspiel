@@ -9,16 +9,15 @@ namespace Wurmspiel
         Links,
         Rechts,
         Hoch,
-        Runter        
+        Runter
     }
+
     public class Wurm
     {
-        private int _aLaenge;        
         public Richtung ARichtung;
         private readonly int _maxX;
         private readonly int _maxY;
-
-        readonly Queue<Wurmzelle> _wurmzellen;
+        private readonly Queue<Wurmzelle> _wurmzellen;
 
         public Wurm(int kopfX, int kopfY, int maxX, int maxY)
         {
@@ -29,7 +28,6 @@ namespace Wurmspiel
             var kopf = new Wurmzelle(kopfX, kopfY);
             _wurmzellen.Enqueue(kopf);
             ErweitereWurmUmWurmzellen(3);
-            _aLaenge = _wurmzellen.Count;
         }
 
         public Queue<Wurmzelle> Zellen()
@@ -46,8 +44,8 @@ namespace Wurmspiel
                 _wurmzellen.Enqueue(neueZelle);
                 alteZelle = neueZelle;
             }
-            
         }
+
         private Wurmzelle ErstelleWurmzelle(int x, int y)
         {
             int neuX = x, neuY = y;
@@ -69,34 +67,32 @@ namespace Wurmspiel
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
             return new Wurmzelle(neuX, neuY);
         }
 
-
-       public int GibKopfPosX()
+        public int GibKopfPosX()
         {
-            return _wurmzellen.First<Wurmzelle>().X;
+            return _wurmzellen.First().X;
         }
-        
+
         public int GibKopfPosY()
         {
-            return _wurmzellen.First<Wurmzelle>().Y;
+            return _wurmzellen.First().Y;
         }
-        
+
         public void SetzeRichtung(Richtung pRichtung)
         {
-            ARichtung = pRichtung;                        
+            ARichtung = pRichtung;
         }
-        
+
         public bool Krieche()
         {
             var kopierterwurm = KopiereWurm();
             BewegeKopf();
             Bewegekoerper(kopierterwurm);
             return !GibtEsKollisionen();
-
         }
+
         public void Wachse()
         {
             ErweitereWurmUmWurmzellen(1);
@@ -107,7 +103,7 @@ namespace Wurmspiel
             switch (ARichtung)
             {
                 case Richtung.Links:
-                    _wurmzellen.First().X--; 
+                    _wurmzellen.First().X--;
                     break;
                 case Richtung.Rechts:
                     _wurmzellen.First().X++;
@@ -121,7 +117,6 @@ namespace Wurmspiel
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
         }
 
         private Queue<Wurmzelle> KopiereWurm()
@@ -141,42 +136,41 @@ namespace Wurmspiel
             var kopierterWurmArr = kopierterwurm.ToArray();
             var neuerWirmArr = _wurmzellen.ToArray();
 
-            for (var i = 0; i < neuerWirmArr.Count(); i++)
+            for (var i = 0; i < neuerWirmArr.Length; i++)
             {
-                if (WennDasDerKopfIstDannIgnorierenWirIhn(i))
-                   continue;
+                if (UeberspringeKopf(i))
+                    continue;
 
-                var kopierteZelle = kopierterWurmArr[i - 1]; 
+                var kopierteZelle = kopierterWurmArr[i - 1];
                 var neueZelle = neuerWirmArr[i];
                 neueZelle.X = kopierteZelle.X;
                 neueZelle.Y = kopierteZelle.Y;
-
             }
         }
 
-        private static bool WennDasDerKopfIstDannIgnorierenWirIhn(int position)
+        private bool UeberspringeKopf(int position)
         {
             return position == 0;
         }
 
         private bool GibtEsKollisionen()
         {
-            return (BeruehrtKopfKoerper() != false) || (BeruehrtKopfWand() != false) || (_wurmzellen.Count >= 10);
+            var beruehrtKoerper = BeruehrtKopfKoerper();
+            var beruehrtWand = BeruehrtKopfWand();
+            var endlaengeErreicht = _wurmzellen.Count >= 10;
+            return (beruehrtKoerper) || (beruehrtWand) || (endlaengeErreicht);
         }
 
         private bool BeruehrtKopfKoerper()
         {
             var wurmzellenaray = _wurmzellen.ToArray();
             var kopf = _wurmzellen.First();
-            for (var i = 0; i < wurmzellenaray.Count(); i++)
+            for (var i = 0; i < wurmzellenaray.Length; i++)
             {
-                if(WennDasDerKopfIstDannIgnorierenWirIhn(i))
+                if (UeberspringeKopf(i))
                     continue;
                 if ((kopf.X == wurmzellenaray[i].X) && (kopf.Y == wurmzellenaray[i].Y))
-                {
                     return true;
-                }
-                
             }
             return false;
         }
@@ -188,3 +182,5 @@ namespace Wurmspiel
         }
     }
 }
+
+

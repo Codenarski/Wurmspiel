@@ -44,7 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FutterZelle.cs" />
+    <Compile Include="Futterzelle.cs" />
     <Compile Include="Oberflaeche.cs">
       <SubType>Form</SubType>
     </Compile>

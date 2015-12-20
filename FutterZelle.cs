@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 
 namespace Wurmspiel
 {
-    class FutterZelle : Zelle
+    class Futterzelle : Zelle
     {
-        public FutterZelle(int pX, int pY) : base(pX, pY)
+        public Futterzelle(int pX, int pY) : base(pX, pY)
         {
 
         }
